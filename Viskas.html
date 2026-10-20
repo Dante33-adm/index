@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Для тебе ❤️</title>
+    <!-- Підключаємо готичний середньовічний шрифт -->
+    <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Cinzel:wght@600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cinzel', serif;
+        }
+
+        body {
+            background-color: #0b0705;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s ease-in-out;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .page.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Сторінка 1: Питання */
+        h1 {
+            font-size: 26px;
+            margin-bottom: 30px;
+            color: #f3c68f;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            position: relative;
+            height: 60px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        #yes-btn {
+            background-color: #8b0000;
+            color: #f3c68f;
+            border: 1px solid #f3c68f;
+            box-shadow: 0 4px 15px rgba(139, 0, 0, 0.6);
+        }
+
+        #no-btn {
+            background-color: #333;
+            color: white;
+            position: relative;
+        }
+
+        .error-popup {
+            position: absolute;
+            bottom: -50px;
+            background: #8b0000;
+            color: #f3c68f;
+            padding: 8px 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            white-space: nowrap;
+            border: 1px solid #f3c68f;
+        }
+
+        .error-popup.show {
+            opacity: 1;
+        }
+
+        /* Сторінка 2: Старовинний лист */
+        .instruction {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: #d4a373;
+        }
+
+        .parchment-container {
+            position: relative;
+            width: 320px;
+            height: 220px;
+            background: #e3c4a8;
+            background-image: radial-gradient(circle, #f4e3cf 0%, #c49a6c 100%);
+            border: 4px solid #5a3825;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 0 40px rgba(90, 56, 37, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .wax-seal {
+            position: absolute;
+            width: 85px;
+            height: 85px;
+            background: radial-gradient(circle, #b7094c 0%, #5c001e 100%);
+            border: 3px double #ffd166;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            color: #ffd166;
+            cursor: grab;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            z-index: 10;
+            user-select: none;
+            touch-action: none;
+        }
+
+        .medieval-letter {
+            display: none;
+            background: #f4e3cf;
+            background-image: url('https://www.transparenttextures.com/patterns/old-paper.png');
+            color: #2c1810;
+            padding: 25px;
+            border-radius: 5px;
+            max-width: 360px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            text-align: center;
+            border: 2px solid #8c6239;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .medieval-letter p {
+            font-family: 'UnifrakturMaguntia', cursive;
+            font-size: 24px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: #3b1d0c;
+        }
+
+        .medieval-letter .signature {
+            font-size: 22px;
+            font-weight: bold;
+            color: #5c001e;
+            margin-top: 15px;
+        }
+
+        .next-btn-medieval {
+            margin-top: 15px;
+            background-color: #5c001e;
+            color: #ffd166;
+            border: 1px solid #ffd166;
+            padding: 8px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: 'Cinzel', serif;
+            display: inline-block;
+        }
+
+        /* Сторінка 3: Чорна діра зі словами */
+        #page-3 {
+            background: radial-gradient(circle at center, #150522 0%, #000000 100%);
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        .black-hole-universe {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+        }
+
+        .vortex-word {
+            position: absolute;
+            font-family: 'Cinzel', serif;
+            white-space: nowrap;
+            pointer-events: none;
+            transition: transform 0.1s linear;
+        }
+
+        .hole-center {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: #000;
+            border-radius: 50%;
+            box-shadow: 0 0 30px 15px rgba(255, 100, 150, 0.4), inset 0 0 20px rgba(0,0,0,1);
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            color: #ff4d6d;
+            font-weight: bold;
+        }
+
+        .zoom-hint {
+            position: absolute;
+            bottom: 30px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1.0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- СТОРІНКА 1 -->
+    <div class="page active" id="page-1">
+        <h1>Ти мене кохаєш? 📜</h1>
+        <div class="buttons">
+            <button class="btn" id="yes-btn" onclick="goToPage(2)">Так</button>
+            <button class="btn" id="no-btn" onclick="showError()">Ні</button>
+            <div class="error-popup" id="popup">Помилка! Дозволено лише «Так» ⚜️</div>
+        </div>
+    </div>
+
+    <!-- СТОРІНКА 2 -->
+    <div class="page" id="page-2">
+        <div id="envelope-box">
+            <div class="instruction">Надійшов старовинний лист!<br>Проведи пальцем по восковій печатці, щоб розпечатати його 🕯️</div>
+            <div class="parchment-container" id="parchment">
+                <div class="wax-seal" id="seal">⚜️</div>
+            </div>
+        </div>
+
+        <div class="medieval-letter" id="letter">
+            <p>Рідна моя, я безмежно кохаю тебе і хочу в цей звичайний день показати, наскільки сильно ти для мене дорога. Відкрий наступну сторінку, щоб побачити, як у моїх очах виглядає всесвіт мого кохання до тебе!</p>
+            <p class="signature">Твоя жаба 🐸</p>
+            <button class="next-btn-medieval" onclick="goToPage(3)">Поглянути у вічність ✨</button>
+        </div>
+    </div>
+
+    <!-- СТОРІНКА 3 -->
+    <div class="page" id="page-3">
+        <div class="black-hole-universe" id="universe">
+            <div class="hole-center">Кохаю</div>
+        </div>
+        <div class="zoom-hint">Зводьте/розводьте пальці, щоб змінювати масштаб чорної діри 🌌</div>
+    </div>
+
+    <script>
+        // Перемикання сторінок
+        function goToPage(pageNum) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + pageNum).classList.add('active');
+            
+            if(pageNum === 3 && window.vortexWords.length === 0) {
+                initBlackHole();
+            }
+        }
+
+        // Помилка кнопки «Ні»
+        function showError() {
+            const popup = document.getElementById('popup');
+            popup.classList.add('show');
+            setTimeout(() => {
+                popup.classList.remove('show');
+            }, 2000);
+        }
+
+        // Логіка стирання воскової печатки пальцем
+        const seal = document.getElementById('seal');
+        const parchment = document.getElementById('parchment');
+        const envelopeBox = document.getElementById('envelope-box');
+        const letter = document.getElementById('letter');
+
+        let isDragging = false;
+        let startX = 0, startY = 0;
+
+        seal.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            startX = e.touches[0].clientX - seal.offsetLeft;
+            startY = e.touches[0].clientY - seal.offsetTop;
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            let x = e.touches[0].clientX - startX;
+            let y = e.touches[0].clientY - startY;
+
+            seal.style.left = x + 'px';
+            seal.style.top = y + 'px';
+
+            if (Math.abs(x) > 70 || Math.abs(y) > 70) {
+                isDragging = false;
+                envelopeBox.style.display = 'none';
+                letter.style.display = 'block';
+            }
+        });
+
+        document.addEventListener('touchend', () => {
+            isDragging = false;
+        });
+
+        // Підтримка мишки для тестування
+        seal.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX - seal.offsetLeft;
+            startY = e.clientY - seal.offsetTop;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            let x = e.clientX - startX;
+            let y = e.clientY - startY;
+            seal.style.left = x + 'px';
+            seal.style.top = y + 'px';
+
+            if (Math.abs(x) > 70 || Math.abs(y) > 70) {
+                isDragging = false;
+                envelopeBox.style.display = 'none';
+                letter.style.display = 'block';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        // Чорна діра із тисячами слів різними мовами
+        window.vortexWords = [];
+        let globalScale = 1;
+
+        function initBlackHole() {
+            const universe = document.getElementById('universe');
+            const languages = [
+                "Кохаю", "I love you", "Te quiero", "Je t'aime", "Ich liebe dich", 
+                "Я тебя люблю", "Ti amo", "Te amo", "Eu te amo", "Seni seviyorum", 
+                "Milujem ťa", "Kocham Cię", "Σε αγαπώ", "Jeg elsker dig", "Minä rakastan sinua",
+                "Mahal kita", "Aloha wia", "Watashi wa anata o aishite imasu", "Seni люблю", 
+                "Amo te", "Tuum ohe", "Buka la", "Volim te", "Szeretlek", "Obicham te"
+            ];
+
+            // Генеруємо багато слів для ефекту чорної діри (~300 штук для плавності на телефоні)
+            const totalWords = 300;
+            
+            for (let i = 0; i < totalWords; i++) {
+                const el = document.createElement('div');
+                el.className = 'vortex-word';
+                el.innerText = languages[Math.floor(Math.random() * languages.length)];
+                
+                // Параметри спіралі
+                const radius = 40 + Math.random() * 320; // відстань від центру
+                const angle = Math.random() * Math.PI * 2; // початковий кут
+                const speed = (Math.random() - 0.5) * 0.02; // швидкість обертання
+                const fontSize = 10 + Math.random() * 14; // розмір шрифту
+                const opacity = 0.2 + Math.random() * 0.8;
+
+                el.style.fontSize = fontSize + 'px';
+                el.style.color = `rgba(255, ${Math.floor(100 + Math.random() * 155)}, ${Math.floor(150 + Math.random() * 105)}, ${opacity})`;
+
+                universe.appendChild(el);
+
+                window.vortexWords.push({
+                    element: el,
+                    radius: radius,
+                    angle: angle,
+                    speed: speed
+                });
+            }
+
+            // Анімація обертання чорної діри
+            function animateVortex() {
+                window.vortexWords.forEach(item => {
+                    item.angle += item.speed; // обертаємо кут
+                    
+                    // Обчислюємо координати по спіралі з урахуванням глобального масштабу
+                    const currentRadius = item.radius * globalScale;
+                    const x = Math.cos(item.angle) * currentRadius;
+                    const y = Math.sin(item.angle) * currentRadius * 0.6; // трохи сплющуємо для 3D ефекту еліпса
+
+                    item.element.style.transform = `translate(${x}px, ${y}px) rotate(${item.angle * 50}deg)`;
+                });
+                requestAnimationFrame(animateVortex);
+            }
+            animateVortex();
+        }
+
+        // Масштабування двома пальцями (Pinch to zoom) для чорної діри
+        let initialPinchDistance = null;
+
+        const page3 = document.getElementById('page-3');
+        page3.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 2) {
+                initialPinchDistance = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+            }
+        });
+
+        page3.addEventListener('touchmove', (e) => {
+            if (e.touches.length === 2 && initialPinchDistance !== null) {
+                const currentDistance = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+
+                const diff = currentDistance - initialPinchDistance;
+                globalScale += diff * 0.005;
+
+                // Обмежуємо зум, щоб діра не зникла зовсім або не стала величезною
+                if (globalScale < 0.3) globalScale = 0.3;
+                if (globalScale > 2.5) globalScale = 2.5;
+
+                initialPinchDistance = currentDistance;
+            }
+        });
+
+        page3.addEventListener('touchend', () => {
+            initialPinchDistance = null;
+        });
+    </script>
+</body>
+</html>
